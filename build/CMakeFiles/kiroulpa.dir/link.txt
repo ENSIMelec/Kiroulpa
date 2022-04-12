@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/kiroulpa.dir/src/main.cpp.o -o kiroulpa   -L/usr/local/lib  -Wl,-rpath,/usr/local/lib -ldxl_sbc_cpp 
