@@ -1,3 +1,0 @@
-/home/pi/Documents/tmp/tmp.bCKtbqF7Mt/build/CMakeFiles/rebuild_cache.dir
-/home/pi/Documents/tmp/tmp.bCKtbqF7Mt/build/CMakeFiles/edit_cache.dir
-/home/pi/Documents/tmp/tmp.bCKtbqF7Mt/build/CMakeFiles/kiroulpa.dir

@@ -1,87 +1,108 @@
-//
-// Created by cleme on 31/03/2022.
-//
-#include <stdio.h>
 #include <iostream>
+#include <unistd.h>
+
+#include <wiringPi.h>
+#include <wiringPiI2C.h>
+
+#include "Config.h"
+#include "MotorManager.h"
+#include "Utils.h"
+#include "Clock.h"
+#include "Odometry.h"
+#include "Point.h"
+#include "Controller.h"
+#include "Strategy.h"
+#include "AX12Manager.h"
+#include "ActionManager.h"
+#include "ServoManager.h"
+
 using namespace std;
 
-#include <dynamixel_sdk/dynamixel_sdk.h>
-using namespace dynamixel;
+// Constants for all the possible exits
+#define EXIT_SUCCESS    0
+#define EXIT_FAIL_I2C   1
 
-#include "dynamixel_sdk/port_handler_linux.h"
-#include "dynamixel_sdk/protocol1_packet_handler.h"
-
-// Control table address
-#define ADDR_AX_BAUD_RATE                  4
-#define ADDR_AX_TORQUE_ENABLE           24                  // Control table address is different in Dynamixel model
-#define ADDR_AX_GOAL_POSITION           30
-#define ADDR_AX_PRESENT_POSITION        36
-#define ADDR_AX_PRESENT_VOLTAGE         42
-#define ADDR_AX_SPEED_VALUE             32
-#define ADDR_AX_TORQUE_LIMIT            34
-#define ADDR_AX_PRESENT_LOAD            40
-
-#define READ_DATA   0x02
-#define HEADER      0xFF
-//Dynamixel series have their own control tables: Addresses and Byte Length in each items. To control one of the items, its address (and length if necessary) is required. Find your requirements in http://support.robotis.com/.
-
-// Protocol version
-#define PROTOCOL_VERSION                1.0                 // See which protocol version is used in the Dynamixel
-// Default setting
-#define BAUDRATE                        1000000
-#define DEVICENAME                      "/dev/ttyACM0"      // Check which port is being used on your controller
-#define DXL_ID 1
-#define TORQUE_ENABLE 1
+// This folder is used to load all the external resources (like configuration files)
+const string RES_PATH = "/home/pi/Documents/Krabbs/res/";
 
 int main(int argc, char **argv) {
-    PortHandler *portHandler = PortHandler::getPortHandler(DEVICENAME);
-    // Open the port
-    if (portHandler->openPort()) {
-        printf("Succeeded to open the port!\n");
-    } else {
-        printf("Failed to open the port!\n");
-        return 1;
-    }
-    if (portHandler->setBaudRate(BAUDRATE)) {
-        printf("Succeeded to change the baudrate!\n");
-    } else {
-        printf("Failed to change the baudrate!\n");
-        return 1;
+//	cout << "-- Starting Krabbs :" << endl;
+
+//    cout << "Loading the configuration ... ";
+    Config config;
+    config.loadFromFile(RES_PATH + "config.info");
+
+    unsigned int deltaAsservTimer = config.getDeltaAsserv();
+
+    // TODO : add this constant to the config.info
+    int I2C_MOTORS = 8;
+//    cout << "done" << endl;
+
+//	cout << "Initializing the GPIO ... ";
+	wiringPiSetupGpio();
+    int i2cM = wiringPiI2CSetup(I2C_MOTORS);
+
+    // TODO : find what these are for
+    int i2cS = wiringPiI2CSetup(config.get_I2C_SERVOS());
+    int i2cSt = wiringPiI2CSetup(9);
+
+    // If not initialized, the addresses are negative
+    if(i2cS < 0 || i2cSt < 0 || i2cM < 0)
+        return EXIT_FAIL_I2C;
+//    cout << "done" << endl;
+
+//    cout << "Initializing the motor manager ... ";
+	MotorManager motorManager(i2cM);
+//    cout << "done" << endl;
+
+//    cout << "Start is done !" << endl;
+
+    timer totalTime;
+
+    SerialCodeurManager serialCodeurManager;
+
+    Odometry odometry(serialCodeurManager);
+    odometry.setPosition(0,0,0);
+
+    Controller controller(&odometry, &motorManager, &config);
+    controller.setTargetXY(300, 300);
+
+    //ActionManager actionManager(i2cS, 2);
+    //actionManager.action(RES_PATH + "actions/simpleAX12Test.as");
+
+    bool strategyIsDone = false;
+
+    timer asservTimer;
+    while(!strategyIsDone && totalTime.elapsed_s() < 10) {
+
+        if(asservTimer.elapsed_ms() >= deltaAsservTimer) {
+//            cout << totalTime.elapsed_us() << ";";
+
+            odometry.update();
+            controller.update();
+
+            if(controller.isTargetReached()) {
+                cout << "Target reached !" << endl;
+                controller.stopMotors();
+                strategyIsDone = true;
+            }
+            asservTimer.restart();
+        }
     }
 
-    PacketHandler * packetHandler = PacketHandler::getPacketHandler(PROTOCOL_VERSION);
+    Utils::sleepMillis(20);
 
-    uint16_t model_number;
-    uint8_t error;
-    int dxl_comm_result;
+//    cout << "Stopping motors " << endl;
+    controller.stopMotors();
 
-    dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, DXL_ID, ADDR_AX_TORQUE_ENABLE, TORQUE_ENABLE, &error);
+//    cout << "-- Quitting the application :" << endl;
+//	cout << "Free memory ... ";
+    //actionManager.close();
+    close(i2cM);
+    close(i2cS);
+    close(i2cSt);
+//    cout << "done" << endl;
 
-    int forceAction = 1024;
-    dxl_comm_result = packetHandler->write2ByteTxRx(portHandler, DXL_ID, ADDR_AX_TORQUE_LIMIT, forceAction, &error);
-    if (dxl_comm_result != COMM_SUCCESS)
-    {
-        //packetHandler->printTxRxResult(dxl_comm_result);
-        std::cout << "Erreur COMM limitation couple " << DXL_ID << std::endl;
-    }
-    else if (error != 0)
-    {
-        //packetHandler->printRxPacketError(dxl_error);
-        std::cout << "Erreur limitation couple " << DXL_ID << std::endl;
-    }
-
-
-    // Write goal position
-    int dxl_goal_position = 0;
-    dxl_comm_result = packetHandler->write2ByteTxRx(portHandler, DXL_ID, ADDR_AX_GOAL_POSITION, dxl_goal_position, &error);
-    if (dxl_comm_result != COMM_SUCCESS)
-    {
-        //packetHandler->printTxRxResult(dxl_comm_result);
-        std::cout << "Erreur COMM ecriture angle " << DXL_ID << std::endl;
-    }
-    else if (error != 0)
-    {
-        //packetHandler->printRxPacketError(dxl_error);
-        std::cout << "Erreur ecriture angle " << DXL_ID << std::endl;
-    }
+//	cout << "-- End of the program" << endl;
+	return EXIT_SUCCESS;
 }

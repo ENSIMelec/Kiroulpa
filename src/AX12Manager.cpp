@@ -1,4 +1,5 @@
 #include "AX12Manager.h"
+#include "Clock.h"
 
 AX12Manager::AX12Manager(int nbAX) : nbAX12(nbAX) {
 	initialisation();
@@ -50,17 +51,17 @@ int AX12Manager::initialisation() {
 		return 1;
 	}
 	//Secondly, the controller sets the communication BAUDRATE at the port opened previously.
-/////////////////////////////////////////IL FAUT INIT TOUS LES AX12 /////////////////////////////////////////////////
+    /////////////////////////////////////////IL FAUT INIT TOUS LES ax12Manager /////////////////////////////////////////////////
 	for(index_ID = 1; index_ID <= nbAX12; index_ID++) {
 		// Enable DXL Torque
-		dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, index_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE, &dxl_error);
+		dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, index_ID, ADDR_AX_TORQUE_ENABLE, TORQUE_ENABLE, &dxl_error);
 		if (dxl_comm_result != COMM_SUCCESS)
 		{
 			//packetHandler->printTxRxResult(dxl_comm_result);
 			std::cout << "Erreur COMM init Dyna " << index_ID << std::endl;
 		}
 		else if (dxl_error != 0)
-		{
+        {
 			//packetHandler->printRxPacketError(dxl_error);
 			std::cout << "Erreur init Dyna " << index_ID << std::endl;
 		}
@@ -84,7 +85,7 @@ void AX12Manager::close() {
 	uint8_t dxl_error = 0;
 	for(int index_ID = 1; index_ID <= nbAX12; index_ID++) {
 		// Disable Dynamixel Torque
-		dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, index_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE, &dxl_error);
+		dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, index_ID, ADDR_AX_TORQUE_ENABLE, TORQUE_DISABLE, &dxl_error);
 		if (dxl_comm_result != COMM_SUCCESS)
 		{
 			//packetHandler->printTxRxResult(dxl_comm_result);
@@ -103,15 +104,15 @@ void AX12Manager::close() {
 		Then, it receives the dxl_error. The function returns 0 if no communication error has been occurred.
 		*/
 	}
-	std::cout << "Close port AX12" << std::endl;
+	std::cout << "Close port ax12Manager" << std::endl;
 	portHandler->closePort();
 }
 
 int AX12Manager::AX12Action(int numActionneur, int angleAction, int forceAction) {
 	timer temps;
 
-	std::cout << "Numéro AX12 ID : " << numActionneur << std::endl;
-	int DXL_ID = numActionneur;
+	std::cout << "Numéro ax12Manager ID : " << numActionneur << std::endl;
+	int dxl_id = numActionneur;
 	int dxl_goal_position = angleAction;
 
 	int dxl_comm_result = COMM_TX_FAIL;
@@ -133,30 +134,30 @@ int AX12Manager::AX12Action(int numActionneur, int angleAction, int forceAction)
 	}
 */
 	//limite le couple
-	dxl_comm_result = packetHandler->write2ByteTxRx(portHandler, DXL_ID, ADDR_MX_TORQUE_LIMIT, forceAction, &dxl_error);
+	dxl_comm_result = packetHandler->write2ByteTxRx(portHandler, numActionneur, ADDR_AX_TORQUE_LIMIT, forceAction, &dxl_error);
 	if (dxl_comm_result != COMM_SUCCESS)
 	{
 		//packetHandler->printTxRxResult(dxl_comm_result);
-		std::cout << "Erreur COMM limitation couple " << DXL_ID << std::endl;
+		std::cout << "Erreur COMM limitation couple " << numActionneur << std::endl;
 	}
 	else if (dxl_error != 0)
 	{
 		//packetHandler->printRxPacketError(dxl_error);
-		std::cout << "Erreur limitation couple " << DXL_ID << std::endl;
+		std::cout << "Erreur limitation couple " << numActionneur << std::endl;
 	}
 
 	temps.restart();
     // Write goal position
-	dxl_comm_result = packetHandler->write2ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_POSITION, dxl_goal_position, &dxl_error);
+	dxl_comm_result = packetHandler->write2ByteTxRx(portHandler, numActionneur, ADDR_AX_GOAL_POSITION, dxl_goal_position, &dxl_error);
     if (dxl_comm_result != COMM_SUCCESS)
     {
       	//packetHandler->printTxRxResult(dxl_comm_result);
-		std::cout << "Erreur COMM ecriture angle " << DXL_ID << std::endl;
+		std::cout << "Erreur COMM ecriture angle " << numActionneur << std::endl;
     }
     else if (dxl_error != 0)
     {
      	//packetHandler->printRxPacketError(dxl_error);
-		std::cout << "Erreur ecriture angle " << DXL_ID << std::endl;
+		std::cout << "Erreur ecriture angle " << numActionneur << std::endl;
     }
     /* //Pas si utile que ça ... Il faudrait plutot faire une boucle "tant qu'on a pas une charge correspondant à la prise de cube dans les pinces ..."
     do {
