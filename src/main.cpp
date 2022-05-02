@@ -1,119 +1,70 @@
 #include <iostream>
 #include <unistd.h>
 
-#include <wiringPi.h>
-#include <wiringPiI2C.h>
+#include "base/Config.h"
+#include "base/MotorManager.h"
+#include "base/Clock.h"
+#include "base/Odometry.h"
+#include "base/Point.h"
+#include "base/Controller.h"
+#include "base/ActionManager.h"
+#include "base/StrategyParser.h"
+#include "base/Strategy.h"
+#include "base/Initialize.h"
 
-/*
-#include "Config.h"
-#include "MotorManager.h"
-#include "Utils.h"
-#include "Clock.h"
-#include "Odometry.h"
-#include "Point.h"
-#include "Controller.h"
-#include "Strategy.h"
-#include "AX12Manager.h"
-#include "ActionManager.h"
-#include "ServoManager.h"
-*/
-
-#include "ValeursResistances.h"
 using namespace std;
 
 // Constants for all the possible exits
 #define EXIT_SUCCESS    0
 #define EXIT_FAIL_I2C   1
 
+#define MAX_TIME 10     // The maximum time the robot will run (in seconds)
+
 // This folder is used to load all the external resources (like configuration files)
 const string RES_PATH = "/home/pi/Documents/Krabbs/res/";
 
 int main(int argc, char **argv) {
 
-    wiringPiSetupGpio();
-    int i2cRes = wiringPiI2CSetup(9);
+    Config *configuration = Initialize::start();
 
-    ValeursResistances valeursResistances(i2cRes);
-    valeursResistances.demandeValeurs();
-//	cout << "-- Starting Krabbs :" << endl;
+    Strategy strategy(RES_PATH + "strategies/Jaune/", "main.strat");
+    strategy.logObjectives();
 
-//    cout << "Loading the configuration ... ";
-/*
-    Config config;
-    config.loadFromFile(RES_PATH + "config.info");
+    Controller * controller = Initialize::getController();
+    Odometry * odometry = Initialize::getOdometry();
 
-    unsigned int deltaAsservTimer = config.getDeltaAsserv();
-
-    // TODO : add this constant to the config.info
-    int I2C_MOTORS = 8;
-//    cout << "done" << endl;
-
-//	cout << "Initializing the GPIO ... ";
-	wiringPiSetupGpio();
-    int i2cM = wiringPiI2CSetup(I2C_MOTORS);
-
-    // TODO : find what these are for
-    int i2cS = wiringPiI2CSetup(config.get_I2C_SERVOS());
-    int i2cSt = wiringPiI2CSetup(9);
-
-    // If not initialized, the addresses are negative
-    if(i2cS < 0 || i2cSt < 0 || i2cM < 0)
-        return EXIT_FAIL_I2C;
-//    cout << "done" << endl;
-
-//    cout << "Initializing the motor manager ... ";
-	MotorManager motorManager(i2cM);
-//    cout << "done" << endl;
-
-//    cout << "Start is done !" << endl;
-
+    unsigned int updateTime = configuration->getDeltaAsserv();
     timer totalTime;
 
-    SerialCodeurManager serialCodeurManager;
+    cout << "Started objective : " << strategy.getCurrentObjective()->getName() << endl;
+    Point * nextPoint = strategy.getCurrentPoint();  // The current point destination
+    nextPoint->logTargetInformation();
 
-    Odometry odometry(serialCodeurManager);
-    odometry.setPosition(0,0,0);
+    timer updateTimer;
+    while(!strategy.isDone() && totalTime.elapsed_s() < MAX_TIME) {
 
-    Controller controller(&odometry, &motorManager, &config);
-    controller.setTargetXY(300, 300);
+        if(updateTimer.elapsed_ms() >= updateTime) {
+//            odometry->update();
+//            controller->update();
 
-    //ActionManager actionManager(i2cS, 2);
-    //actionManager.action(RES_PATH + "actions/simpleAX12Test.as");
+            if(controller->isTargetReached()) {
+                cout << "Point reached !" << endl;
+//                controller->stopMotors();
 
-    bool strategyIsDone = false;
+                // Go to the next point
+                nextPoint = strategy.getNextPoint();
 
-    timer asservTimer;
-    while(!strategyIsDone && totalTime.elapsed_s() < 10) {
-
-        if(asservTimer.elapsed_ms() >= deltaAsservTimer) {
-//            cout << totalTime.elapsed_us() << ";";
-
-            odometry.update();
-            controller.update();
-
-            if(controller.isTargetReached()) {
-                cout << "Target reached !" << endl;
-                controller.stopMotors();
-                strategyIsDone = true;
+                if(!strategy.isDone()) {
+                    controller->setTargetPoint(nextPoint);
+                }
             }
-            asservTimer.restart();
+            updateTimer.restart();
         }
     }
 
-    Utils::sleepMillis(20);
+    // Quitting the application
+    Initialize::end();
 
-//    cout << "Stopping motors " << endl;
-    controller.stopMotors();
-
-//    cout << "-- Quitting the application :" << endl;
-//	cout << "Free memory ... ";
-    //actionManager.close();
-    close(i2cM);
-    close(i2cS);
-    close(i2cSt);
-//    cout << "done" << endl;
-
-//	cout << "-- End of the program" << endl;
+	cout << "-- End of the program" << endl;
 	return EXIT_SUCCESS;
- */
 }
