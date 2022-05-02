@@ -4,6 +4,7 @@
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 
+/*
 #include "Config.h"
 #include "MotorManager.h"
 #include "Utils.h"
@@ -15,7 +16,9 @@
 #include "AX12Manager.h"
 #include "ActionManager.h"
 #include "ServoManager.h"
+*/
 
+#include "ValeursResistances.h"
 using namespace std;
 
 // Constants for all the possible exits
@@ -26,9 +29,16 @@ using namespace std;
 const string RES_PATH = "/home/pi/Documents/Krabbs/res/";
 
 int main(int argc, char **argv) {
+
+    wiringPiSetupGpio();
+    int i2cRes = wiringPiI2CSetup(9);
+
+    ValeursResistances valeursResistances(i2cRes);
+    valeursResistances.demandeValeurs();
 //	cout << "-- Starting Krabbs :" << endl;
 
 //    cout << "Loading the configuration ... ";
+/*
     Config config;
     config.loadFromFile(RES_PATH + "config.info");
 
@@ -105,4 +115,5 @@ int main(int argc, char **argv) {
 
 //	cout << "-- End of the program" << endl;
 	return EXIT_SUCCESS;
+ */
 }
