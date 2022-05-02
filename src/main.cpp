@@ -10,7 +10,7 @@
 #include "base/ActionManager.h"
 #include "base/StrategyParser.h"
 #include "base/Strategy.h"
-#include "base/Initialize.h"
+#include "base/Initializer.h"
 
 using namespace std;
 
@@ -25,13 +25,13 @@ const string RES_PATH = "/home/pi/Documents/Krabbs/res/";
 
 int main(int argc, char **argv) {
 
-    Config *configuration = Initialize::start();
+    Config *configuration = Initializer::start();
 
     Strategy strategy(RES_PATH + "strategies/Jaune/", "main.strat");
     strategy.logObjectives();
 
-    Controller * controller = Initialize::getController();
-    Odometry * odometry = Initialize::getOdometry();
+    Controller * controller = Initializer::getController();
+    Odometry * odometry = Initializer::getOdometry();
 
     unsigned int updateTime = configuration->getDeltaAsserv();
     timer totalTime;
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
     }
 
     // Quitting the application
-    Initialize::end();
+    Initializer::end();
 
 	cout << "-- End of the program" << endl;
 	return EXIT_SUCCESS;
