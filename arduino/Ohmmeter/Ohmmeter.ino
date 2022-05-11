@@ -13,7 +13,7 @@
 
    * Vcc is set to 5V
    * GND is set to 0V
-   * R1 is set to 2176 Ohms
+   * R1 is set to 2290 Ohms
    * R2 is the resistance we want to calculate
    * ResPin is the pin linked to the Arduino
 
@@ -23,14 +23,15 @@
    Added some documentation
 */
 
-#define DEBUG
+//#define DEBUG
 
 #include <Wire.h>
 #define SLAVE_ADDRESS 9
 
-#define RES_Pin A7
-#define R1 2176
-#define Vcc 5
+#define RES_Pin A1
+#define R1 2290
+#define Vcc 5.0
+#define NB_MES 10
 
 void setup() {
   pinMode(RES_Pin, INPUT);
@@ -51,22 +52,25 @@ void loop() {
 }
 
 long readResistance(){
-  
-  double Vres = analogRead(RES_Pin)* Vcc / 1023;
-  unsigned long resistor = Vres * R1 / (Vcc - Vres);
-  return resistor;
+  unsigned long resistor = 0;
+  double Vres = 0;
+  for(int i=0;i<NB_MES;i++){
+    Vres = analogRead(RES_Pin)* Vcc / 1023;
+    resistor += Vres * R1 / (Vcc - Vres);
+  }
+  return resistor / NB_MES;
 }
 
 void sendData()
 {
   long mes = readResistance();
-  if (mes > 4000 && mes < 5000) { // 470 Ohms
+  if (mes > 400 && mes < 600) { // 470 Ohms
     Serial.println("Violette");
     Wire.write(0x01);
-  } else if (mes > 8000 && mes < 11000) { // 1k Ohms
+  } else if (mes > 800 && mes < 1200) { // 1k Ohms
     Serial.println("Orange");
     Wire.write(0x02);
-  } else { // 4.7k Ohms
+  } else {
     Serial.println("Personne");
     Wire.write(0x03);
   }
