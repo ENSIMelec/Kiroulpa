@@ -1,16 +1,18 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "base/Config.h"
-#include "base/MotorManager.h"
-#include "base/Clock.h"
-#include "base/Odometry.h"
-#include "base/Point.h"
-#include "base/Controller.h"
-#include "base/ActionManager.h"
-#include "base/StrategyParser.h"
-#include "base/Strategy.h"
-#include "base/Initializer.h"
+#include "base/controller/MotorManager.h"
+#include "base/utility/Clock.h"
+#include "base/odometry/Odometry.h"
+#include "base/strategy/Point.h"
+#include "base/controller/Controller.h"
+#include "base/actuators/ActionManager.h"
+#include "base/strategy/StrategyParser.h"
+#include "base/strategy/Strategy.h"
+#include "base/utility/Initializer.h"
+#include "base/Lidar.h"
+#include "ResistanceReader.h"
+#include "KiroulpaInitializer.h"
 
 using namespace std;
 
@@ -21,44 +23,69 @@ using namespace std;
 #define MAX_TIME 10     // The maximum time the robot will run (in seconds)
 
 // This folder is used to load all the external resources (like configuration files)
-const string RES_PATH = "/home/pi/Documents/Krabbs/res/";
+const string RES_PATH = "/home/pi/Documents/Kiroulpa/res/";
 
 int main(int argc, char **argv) {
+    Configuration *configuration = KiroulpaInitializer::start();
 
-    Config *configuration = Initializer::start();
+    Controller * controller = KiroulpaInitializer::getController();
+    Odometry * odometry = KiroulpaInitializer::getOdometry();
+    ActionManager * actionManager = KiroulpaInitializer::getActionManager();
 
-    Strategy strategy(RES_PATH + "strategies/Jaune/", "main.strat");
-    strategy.logObjectives();
-
-    Controller * controller = Initializer::getController();
-    Odometry * odometry = Initializer::getOdometry();
-
-    unsigned int updateTime = configuration->getDeltaAsserv();
+    unsigned int updateTime = configuration->getInt("global.update_time");
     timer totalTime;
 
+    Strategy strategy(RES_PATH + "strategies/Forward/", "main.strategy");
     cout << "Started objective : " << strategy.getCurrentObjective()->getName() << endl;
-    Point * nextPoint = strategy.getCurrentPoint();  // The current point destination
-    nextPoint->logTargetInformation();
+    Point * currentPoint = strategy.getCurrentPoint();  // The current point destination
+
+    // Set the initial location
+    odometry->setPosition(currentPoint->getX(), currentPoint->getY(), currentPoint->getTheta());
+
+    // Set first target
+    currentPoint = strategy.getNextPoint();
+//    controller->setTargetXY((int) currentPoint->getX(), (int) currentPoint->getY());
+    controller->setNextPoint(currentPoint);
 
     timer updateTimer;
-    while(!strategy.isDone() && totalTime.elapsed_s() < MAX_TIME) {
+    while(!strategy.isDone() && totalTime.elapsed_s() < configuration->getInt("global.match_time")) {
 
         if(updateTimer.elapsed_ms() >= updateTime) {
-//            odometry->update();
-//            controller->update();
+
+//            if(Lidar::isActive()){
+//                printf("Warning : %d | Danger : %d\n", Lidar::isWarning(), Lidar::isDanger());
+//            }
+
+            odometry->update();
+            odometry->debug();
+
+            if(Initializer::isLidarActivated() && Lidar::isDanger()) {
+                controller->stopMotors();
+            } else {
+                controller->update();
+            }
+
+            controller->debug();
 
             if(controller->isTargetReached()) {
-                cout << "Point reached !" << endl;
-//                controller->stopMotors();
+                cout << endl << "Point reached !" << endl;
+                controller->stopMotors();
+
+                // Execute the action
+                if(currentPoint->isActionAfterMovement()) {
+                    string actionFile = currentPoint->getAction();
+                    if(actionFile != "null") actionManager->action(actionFile);
+                }
 
                 // Go to the next point
-                nextPoint = strategy.getNextPoint();
+                currentPoint = strategy.getNextPoint();
 
                 if(!strategy.isDone()) {
-                    controller->setTargetPoint(nextPoint);
+                    controller->setTargetXY((int) currentPoint->getX(), (int) currentPoint->getY());
                 }
             }
             updateTimer.restart();
+
         }
     }
 
