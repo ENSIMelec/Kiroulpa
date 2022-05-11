@@ -1,5 +1,5 @@
 //
-// Created by cleme on 26/04/2022.
+// Created by Clement on 26/04/2022.
 //
 #include <iostream>
 #include <wiringPiI2C.h>
@@ -9,10 +9,10 @@
 #define KIROULPA_VALEURSRESISTANCES_H
 
 
-class ValeursResistances {
+class ResistanceReader {
 public :
-    ValeursResistances(int addr);
-    int demandeValeurs();
+    explicit ResistanceReader(int address);
+    int getValue();
 
 private:
     int fd = 0;
