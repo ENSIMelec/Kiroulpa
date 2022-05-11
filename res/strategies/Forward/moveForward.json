@@ -1,0 +1,15 @@
+{
+	"Points": [
+		{
+			"X": 0,
+			"Y": 0,
+			"angle": 0,
+			"type": "RecalageXY"
+		}, {
+			"X": 500,
+			"Y": 0,
+			"type": "Angle",
+			"angle": 720
+		}
+	]
+}
