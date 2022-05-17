@@ -6,10 +6,30 @@
 			"angle": 0,
 			"type": "RecalageXY"
 		}, {
-			"X": 500,
+			"X": 800,
+			"Y": 500,
+			"type": "MoveToPosition"
+		}, {
+			"angle": 0,
+			"type": "Angle"
+		}, {
+			"X": 1500,
+			"Y": 500,
+			"type": "MoveToPosition"
+		}, {
+			"angle": -90,
+			"type": "Angle"
+		}, {
+			"X": 1500,
+			"Y": -200,
+			"type": "MoveToPosition"
+		}, {
+			"X": 0,
 			"Y": 0,
-			"type": "Angle",
-			"angle": 720
+			"type": "MoveToPosition"
+		}, {
+			"angle": 0,
+			"type": "Angle"
 		}
 	]
 }
