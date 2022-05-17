@@ -13,6 +13,7 @@
 #include "base/Lidar.h"
 #include "ResistanceReader.h"
 #include "KiroulpaInitializer.h"
+#include "base/ui/UI.h"
 
 using namespace std;
 
@@ -22,11 +23,12 @@ using namespace std;
 
 #define MAX_TIME 10     // The maximum time the robot will run (in seconds)
 
-// This folder is used to load all the external resources (like configuration files)
-const string RES_PATH = "/home/pi/Documents/Kiroulpa/res/";
-
 int main(int argc, char **argv) {
-    Configuration *configuration = KiroulpaInitializer::start();
+
+    Strategy strategy("../res/strategies/", "Forward");
+    Initializer::setStrategy(&strategy);
+
+    Configuration *configuration = KiroulpaInitializer::start(false);
 
     Controller * controller = KiroulpaInitializer::getController();
     Odometry * odometry = KiroulpaInitializer::getOdometry();
@@ -35,8 +37,6 @@ int main(int argc, char **argv) {
     unsigned int updateTime = configuration->getInt("global.update_time");
     timer totalTime;
 
-    Strategy strategy(RES_PATH + "strategies/Forward/", "main.strategy");
-    cout << "Started objective : " << strategy.getCurrentObjective()->getName() << endl;
     Point * currentPoint = strategy.getCurrentPoint();  // The current point destination
 
     // Set the initial location
@@ -44,7 +44,6 @@ int main(int argc, char **argv) {
 
     // Set first target
     currentPoint = strategy.getNextPoint();
-//    controller->setTargetXY((int) currentPoint->getX(), (int) currentPoint->getY());
     controller->setNextPoint(currentPoint);
 
     timer updateTimer;
@@ -52,12 +51,14 @@ int main(int argc, char **argv) {
 
         if(updateTimer.elapsed_ms() >= updateTime) {
 
+            UI::display();
+
 //            if(Lidar::isActive()){
 //                printf("Warning : %d | Danger : %d\n", Lidar::isWarning(), Lidar::isDanger());
 //            }
 
             odometry->update();
-            odometry->debug();
+//            odometry->debug();
 
             if(Initializer::isLidarActivated() && Lidar::isDanger()) {
                 controller->stopMotors();
@@ -65,10 +66,10 @@ int main(int argc, char **argv) {
                 controller->update();
             }
 
-            controller->debug();
+//            controller->debug();
 
             if(controller->isTargetReached()) {
-                cout << endl << "Point reached !" << endl;
+//                cout << endl << "Point reached !" << endl;
                 controller->stopMotors();
 
                 // Execute the action
@@ -81,7 +82,7 @@ int main(int argc, char **argv) {
                 currentPoint = strategy.getNextPoint();
 
                 if(!strategy.isDone()) {
-                    controller->setTargetXY((int) currentPoint->getX(), (int) currentPoint->getY());
+                    controller->setNextPoint(currentPoint);
                 }
             }
             updateTimer.restart();
@@ -89,9 +90,12 @@ int main(int argc, char **argv) {
         }
     }
 
+    odometry->update();
+    UI::display();
+    delay(2000);
+
     // Quitting the application
     Initializer::end();
 
-	cout << "-- End of the program" << endl;
 	return EXIT_SUCCESS;
 }

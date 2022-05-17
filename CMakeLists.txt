@@ -39,11 +39,15 @@ file(GLOB SRC
 
         "src/base/utility/*.cpp"
         "src/base/utility/*.h"
+
+        "src/base/ui/*.cpp"
+        "src/base/ui/*.h"
         )
 
 add_executable(kiroulpa ${SRC})
 
-# Linking wiringPi to the binary
-target_link_libraries(kiroulpa wiringPi)
-target_link_libraries(kiroulpa dxl_sbc_cpp)
+# Linking libraries
+target_link_libraries(kiroulpa wiringPi)        # For GPIO
+target_link_libraries(kiroulpa ncursesw)        # For console interface
+target_link_libraries(kiroulpa dxl_sbc_cpp)     # For the AX12
 target_link_libraries(kiroulpa Threads::Threads)
