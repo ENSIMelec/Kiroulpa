@@ -45,22 +45,37 @@ controller {
 	;acceleration_coeff 0.1
 
 	angle {
+		; 15.0 V
 		angle_threshold 0.5
-
-		Pk 		210
-		Pi      0.02
-		Pd 		0
-
+		Pk 				20
+		Pi      		0.8
+		Pd 				1
 		acceleration 	1
 	}
 
 	movement {
-		distance_threshold 5
+		distance {
+			; 15.0 V
+			Pk	0.95
+			Pi	0.0001
+			Pd	0
 
-		Pk_angle 0
-		Pk_distance 1
+			min_pwm 0
+			max_pwm 90
+		}
 
-		acceleration 1
+		angle {
+			; 15.0 V
+			Pk 	120
+			Pi  0
+			Pd	0
+
+			min_pwm	-30
+			max_pwm	30
+		}
+
+		distance_threshold 	4
+		acceleration 		1
 	}
 
 	translation {
