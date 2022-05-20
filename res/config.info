@@ -4,7 +4,6 @@ global {
 	update_time 	10
 	match_time 		10
 
-	nb_AX12 		0
 	nb_AX12 		7
 
 	activate_lidar	0
