@@ -25,7 +25,7 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
-    Strategy strategy("../res/strategies/", "Forward");
+    Strategy strategy("../res/strategies/", "Test");
     Initializer::setStrategy(&strategy);
 
     Configuration *configuration = KiroulpaInitializer::start(false);
@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     ActionManager * actionManager = KiroulpaInitializer::getActionManager();
 
     unsigned int updateTime = configuration->getInt("global.update_time");
-    timer totalTime;
+    Clock totalTime;
 
     Point * currentPoint = strategy.getCurrentPoint();  // The current point destination
 
@@ -46,11 +46,13 @@ int main(int argc, char **argv) {
     currentPoint = strategy.getNextPoint();
     controller->setNextPoint(currentPoint);
 
-    timer updateTimer;
+    UI::logAndRefresh("Entering main loop.");
+
+    Clock updateTimer;
     while(!strategy.isDone() && totalTime.elapsed_s() < configuration->getInt("global.match_time")) {
 
         if(updateTimer.elapsed_ms() >= updateTime) {
-
+            UI::update();
             UI::display();
 
 //            if(Lidar::isActive()){
@@ -58,6 +60,7 @@ int main(int argc, char **argv) {
 //            }
 
             odometry->update();
+
 //            odometry->debug();
 
             if(Initializer::isLidarActivated() && Lidar::isDanger()) {
@@ -74,7 +77,7 @@ int main(int argc, char **argv) {
 
                 // Execute the action
                 if(currentPoint->isActionAfterMovement()) {
-                    string actionFile = currentPoint->getAction();
+                    string actionFile = currentPoint->getAction() + ".as";
                     if(actionFile != "null") actionManager->action(actionFile);
                 }
 
@@ -89,10 +92,6 @@ int main(int argc, char **argv) {
 
         }
     }
-
-    odometry->update();
-    UI::display();
-    delay(2000);
 
     // Quitting the application
     Initializer::end();

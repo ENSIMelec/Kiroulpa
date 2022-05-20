@@ -4,6 +4,7 @@
 
 #include <wiringPiI2C.h>
 #include "KiroulpaInitializer.h"
+#include "base/ui/UI.h"
 
 Configuration * KiroulpaInitializer::start(bool log) {
 
@@ -13,18 +14,17 @@ Configuration * KiroulpaInitializer::start(bool log) {
     // Kiroulpa specific initialization
     initResistanceReader();
 
+    UI::logAndRefresh("End of initialization");
     return Initializer::configuration;
 }
 
 void KiroulpaInitializer::initResistanceReader() {
-    if(allowLogging) cout << "Initializing the resistance reader ... ";
-
     // Get the file descriptor for the arduino
     int address = Initializer::configuration->getInt("i2c.ohmmeter");
     resistanceReader_fd = wiringPiI2CSetup(address);
     resistanceReader = new ResistanceReader(resistanceReader_fd);
 
-    if(allowLogging) cout << "done" << endl;
+    UI::logAndRefresh(" -- Ohmmeter done");
 }
 
 void KiroulpaInitializer::end() {
