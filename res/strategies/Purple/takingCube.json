@@ -26,11 +26,14 @@
 			"action": "closeLeftClamp",
 			"type": "Action"
 		}, {
+			"time": 500,
+			"type": "Wait"
+		}, {
 			"action": "elevatorUp",
 			"type": "Action"
 		}, {
-			"time": 5000,
+			"time": 500,
 			"type": "Wait"
-		}
+		} 
 	]
 }

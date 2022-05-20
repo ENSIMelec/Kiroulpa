@@ -1,0 +1,30 @@
+{
+	"Points": [
+		{
+			"X": -200,
+			"Y": 0,
+			"type": "MoveToPositionRelativeToAngle",
+			"direction": "backward"
+		},
+		{
+			"angle": -90,
+			"type": "Angle"
+		}, {
+			"X": 30,
+			"Y": -600,
+			"type": "MoveToPosition"
+		}, {
+			"angle": -90,
+			"type": "AbsoluteAngle"
+		}, {
+			"X": 400,
+			"Y": 0,
+			"type": "MoveToPositionRelativeToAngle",
+			"timeout": 2000,
+			"max_speed": 40
+		}, {
+			"action": "openLeftClamp",
+			"type": "Action"
+		}
+	]
+}
