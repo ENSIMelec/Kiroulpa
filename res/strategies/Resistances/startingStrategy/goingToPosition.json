@@ -1,0 +1,28 @@
+{
+	"Points": [
+		{
+			"X": 0,
+			"Y": 0,
+			"angle": 0,
+			"type": "SetXYTheta"
+		}, {
+			"X": 940,
+			"Y": 850,
+			"type": "MoveToPosition"
+		}, {
+			"angle": 90,
+			"type": "AbsoluteAngle"
+		}, {
+			"action": "initResistanceReader",
+			"type": "Action"
+		}, {
+			"time": 1000,
+			"type": "Wait"
+		}, {
+			"X": 110,
+			"Y": 0,
+			"max_speed": 35,
+			"type": "MoveToPositionRelativeToAngle"
+		}
+	]
+}

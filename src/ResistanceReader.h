@@ -8,6 +8,12 @@
 #ifndef KIROULPA_VALEURSRESISTANCES_H
 #define KIROULPA_VALEURSRESISTANCES_H
 
+#define START_BYTE  0xA5
+#define END_BYTE    0x5A
+
+#define RED     0x00
+#define YELLOW  0x01
+#define PURPLE  0x02
 
 class ResistanceReader {
 public :
@@ -17,6 +23,7 @@ public :
 private:
     int fd = 0;
 
+    void printBuffer(const std::byte *buffer) const;
 };
 
 

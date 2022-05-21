@@ -13,6 +13,7 @@
 #include "base/Lidar.h"
 #include "ResistanceReader.h"
 #include "KiroulpaInitializer.h"
+#include "MatchManager.h"
 #include "base/ui/UI.h"
 
 using namespace std;
@@ -21,35 +22,23 @@ using namespace std;
 #define EXIT_SUCCESS    0
 #define EXIT_FAIL_I2C   1
 
-#define MAX_TIME 10     // The maximum time the robot will run (in seconds)
-
 int main(int argc, char **argv) {
 
-    Strategy strategy("../res/strategies/", "Test");
-    Initializer::setStrategy(&strategy);
-
     Configuration *configuration = KiroulpaInitializer::start(false);
-
+    ResistanceReader * resistanceReader = KiroulpaInitializer::getResistanceReader();
     Controller * controller = KiroulpaInitializer::getController();
     Odometry * odometry = KiroulpaInitializer::getOdometry();
-    ActionManager * actionManager = KiroulpaInitializer::getActionManager();
+    MatchManager * matchManager = KiroulpaInitializer::getMatchManager();
+
+    UI::initModules();
 
     unsigned int updateTime = configuration->getInt("global.update_time");
-    Clock totalTime;
-
-    Point * currentPoint = strategy.getCurrentPoint();  // The current point destination
-
-    // Set the initial location
-    odometry->setPosition(currentPoint->getX(), currentPoint->getY(), currentPoint->getTheta());
-
-    // Set first target
-    currentPoint = strategy.getNextPoint();
-    controller->setNextPoint(currentPoint);
+    bool stopMotors = false;
 
     UI::logAndRefresh("Entering main loop.");
 
     Clock updateTimer;
-    while(!strategy.isDone() && totalTime.elapsed_s() < configuration->getInt("global.match_time")) {
+    while(!matchManager->isMatchDone()) {
 
         if(updateTimer.elapsed_ms() >= updateTime) {
             UI::update();
@@ -58,38 +47,26 @@ int main(int argc, char **argv) {
 //            if(Lidar::isActive()){
 //                printf("Warning : %d | Danger : %d\n", Lidar::isWarning(), Lidar::isDanger());
 //            }
-
             odometry->update();
 
-//            odometry->debug();
-
+            // All the case we should stop the motors
             if(Initializer::isLidarActivated() && Lidar::isDanger()) {
+                stopMotors = true;
+            }
+
+            // Update the controller and set the motor commands (unless the motors should be stopped)
+            if(stopMotors) {
                 controller->stopMotors();
             } else {
                 controller->update();
             }
 
-//            controller->debug();
-
             if(controller->isTargetReached()) {
-//                cout << endl << "Point reached !" << endl;
-                controller->stopMotors();
-
-                // Execute the action
-                if(currentPoint->isActionAfterMovement()) {
-                    string actionFile = currentPoint->getAction() + ".as";
-                    if(actionFile != "null") actionManager->action(actionFile);
-                }
-
-                // Go to the next point
-                currentPoint = strategy.getNextPoint();
-
-                if(!strategy.isDone()) {
-                    controller->setNextPoint(currentPoint);
-                }
+                matchManager->next();
+//                controller->setNextPoint(nextPoint);
             }
-            updateTimer.restart();
 
+            updateTimer.restart();
         }
     }
 

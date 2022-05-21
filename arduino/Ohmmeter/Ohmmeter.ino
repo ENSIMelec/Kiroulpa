@@ -4,18 +4,18 @@
 
 
   Schematic :
-  
+
              |----------|              |----------|
    Vcc ------|  R1      |------|-------|   R2     |----- GND
              |----------|      |       |----------|
                             ResPin
 
 
-   * Vcc is set to 5V
-   * GND is set to 0V
-   * R1 is set to 2290 Ohms
-   * R2 is the resistance we want to calculate
-   * ResPin is the pin linked to the Arduino
+     Vcc is set to 5V
+     GND is set to 0V
+     R1 is set to 2290 Ohms
+     R2 is the resistance we want to calculate
+     ResPin is the pin linked to the Arduino
 
    Author : Tom Pouderoux
 
@@ -27,14 +27,26 @@
 
 #include <Wire.h>
 #define SLAVE_ADDRESS 9
+#define START_BYTE  0xA5
+#define END_BYTE    0x5A
 
-#define RES_Pin A1
+// Colors
+#define RED         0x00
+#define YELLOW      0x01
+#define PURPLE      0x02
+
+#define RES_PIN_0 A0
+#define RES_PIN_1 A1
+
+double resistors[] = {0, 0};
+
 #define R1 2290
 #define Vcc 5.0
-#define NB_MES 10
+#define NB_MES 1
 
 void setup() {
-  pinMode(RES_Pin, INPUT);
+  pinMode(RES_PIN_0, INPUT);
+  pinMode(RES_PIN_1, INPUT);
 
   Wire.begin(SLAVE_ADDRESS);
   Wire.onRequest(sendData);
@@ -44,18 +56,24 @@ void setup() {
 
 void loop() {
 #ifdef DEBUG
-  Serial.print("Value resistance : ");
-  Serial.println(readResistance());
+  double r0 = readResistance(RES_PIN_0);
+  double r1 = readResistance(RES_PIN_1);
+
+  Serial.print("R0 : ");
+  Serial.print(r0);
+  Serial.print("\tR1 : ");
+  Serial.println(r1); 
 
   delay(50);
 #endif
 }
 
-long readResistance(){
+long readResistance(int pin) {
   unsigned long resistor = 0;
+
   double Vres = 0;
-  for(int i=0;i<NB_MES;i++){
-    Vres = analogRead(RES_Pin)* Vcc / 1023;
+  for (int i = 0; i < NB_MES; i++) {
+    Vres = analogRead(pin) * Vcc / 1023;
     resistor += Vres * R1 / (Vcc - Vres);
   }
   return resistor / NB_MES;
@@ -63,15 +81,24 @@ long readResistance(){
 
 void sendData()
 {
-  long mes = readResistance();
-  if (mes > 400 && mes < 600) { // 470 Ohms
-    Serial.println("Violette");
-    Wire.write(0x01);
-  } else if (mes > 800 && mes < 1200) { // 1k Ohms
-    Serial.println("Orange");
-    Wire.write(0x02);
+  double r0 = readResistance(RES_PIN_0);
+  double r1 = readResistance(RES_PIN_1);
+
+  uint8_t color1 = getColor(r0);
+  uint8_t color2 = getColor(r1);
+
+  Wire.write(START_BYTE);
+  Wire.write(color1);
+  Wire.write(color2);
+  Wire.write(END_BYTE);
+}
+
+uint8_t getColor(double res) {
+  if (res > 400 && res < 600) { // 470 Ohms
+    return PURPLE;
+  } else if (res > 800 && res < 1200) { // 1k Ohms
+    return YELLOW;
   } else {
-    Serial.println("Personne");
-    Wire.write(0x03);
+    return RED;
   }
 }

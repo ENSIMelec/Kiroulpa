@@ -2,12 +2,12 @@ global {
 	; Temps d’attente entre chaque boucle d’asservissement, en ms.
 	; Attention : une valeur trop élevée sature le bus I2C !
 	update_time 	10
-	match_time 		10
+	match_time 		15
 
 	nb_AX12 		7
 
 	activate_lidar	0
-	activate_motors	0
+	activate_motors	1
 }
 
 i2c {

@@ -13,6 +13,7 @@ Configuration * KiroulpaInitializer::start(bool log) {
 
     // Kiroulpa specific initialization
     initResistanceReader();
+    initMatchManager();
 
     UI::logAndRefresh("End of initialization");
     return Initializer::configuration;
@@ -29,5 +30,10 @@ void KiroulpaInitializer::initResistanceReader() {
 
 void KiroulpaInitializer::end() {
     Initializer::end();
+}
+
+void KiroulpaInitializer::initMatchManager() {
+    matchManager = new MatchManager();
+    UI::logAndRefresh(" -- Match Manager done");
 }
 

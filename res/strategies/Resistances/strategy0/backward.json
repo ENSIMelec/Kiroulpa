@@ -1,0 +1,11 @@
+{
+	"Points": [
+		{
+			"time": 50,
+			"type": "Wait"
+		}, {
+			"time": 50,
+			"type": "Wait"
+		}
+	]
+}

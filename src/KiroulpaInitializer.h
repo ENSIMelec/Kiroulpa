@@ -8,6 +8,7 @@
 
 #include "base/utility/Initializer.h"
 #include "ResistanceReader.h"
+#include "MatchManager.h"
 
 class KiroulpaInitializer : public Initializer {
 
@@ -17,10 +18,14 @@ public:
 
     // ---------- Getters ----------
     static ResistanceReader * getResistanceReader() {return resistanceReader;}
+    static MatchManager * getMatchManager() {return matchManager;}
 private:
     static void initResistanceReader();
     static inline ResistanceReader * resistanceReader;
     static inline int resistanceReader_fd;
+
+    static void initMatchManager();
+    static inline MatchManager * matchManager;
 };
 
 
