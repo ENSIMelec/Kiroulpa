@@ -23,7 +23,7 @@
    Added some documentation
 */
 
-//#define DEBUG
+#define DEBUG
 
 #include <Wire.h>
 #define SLAVE_ADDRESS 9
@@ -34,6 +34,7 @@
 #define RED         0x00
 #define YELLOW      0x01
 #define PURPLE      0x02
+#define NONE        0x03
 
 #define RES_PIN_0 A0
 #define RES_PIN_1 A1
@@ -61,10 +62,12 @@ void loop() {
 
   Serial.print("R0 : ");
   Serial.print(r0);
+  Serial.print(getColor(r0) == RED ? " (RED)" : getColor(r0) == PURPLE ? " (PURPLE)" : getColor(r0) == YELLOW ? " (YELLOW)" : " (NONE)");
   Serial.print("\tR1 : ");
-  Serial.println(r1); 
+  Serial.print(r1); 
+  Serial.println(getColor(r1) == RED ? " (RED)" : getColor(r1) == PURPLE ? " (PURPLE)" : getColor(r1) == YELLOW ? " (YELLOW)" : " (NONE)");
 
-  delay(50);
+  
 #endif
 }
 
@@ -98,7 +101,9 @@ uint8_t getColor(double res) {
     return PURPLE;
   } else if (res > 800 && res < 1200) { // 1k Ohms
     return YELLOW;
-  } else {
+  } else if(res > 4000 && res < 6000) {
     return RED;
+  } else{
+    return NONE;
   }
 }
