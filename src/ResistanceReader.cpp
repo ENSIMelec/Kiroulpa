@@ -13,15 +13,15 @@ ResistanceReader::ResistanceReader(int address) {
     fd = address;
 }
 
-int ResistanceReader::getValue(){
+int ResistanceReader::getValues(){
 
     // Read data from arduino
     byte buffer[4];
     read(fd, buffer, 4);
 
     int startByte = (int) buffer[0];
-    int rightRes = (int) buffer[1];
-    int leftRes = (int) buffer[2];
+    leftRes = (int) buffer[1];
+    rightRes = (int) buffer[2];
     int endByte = (int) buffer[3];
 
 //    int startByte = wiringPiI2CRead(fd);
@@ -29,14 +29,29 @@ int ResistanceReader::getValue(){
 //    int leftRes = wiringPiI2CRead(fd);
 //    int endByte = wiringPiI2CRead(fd);
 
-    printf("%d\n", startByte);
-    printf("%d\n", rightRes);
-    printf("%d\n", leftRes);
-    printf("%d\n", endByte);
+//    printf("%d\n", startByte);
+//    printf("%d\n", rightRes);
+//    printf("%d\n", leftRes);
+//    printf("%d\n", endByte);
 
     if(startByte != START_BYTE || endByte != END_BYTE) {
         UI::logAndRefresh("[RESISTANCE READER] Incorrect message");
         return EXIT_FAILURE;
+    }
+
+    switch (leftRes) {
+        case RED:
+            UI::logAndRefresh("[LEFT] red");
+            break;
+        case PURPLE:
+            UI::logAndRefresh("[LEFT] purple");
+            break;
+        case YELLOW:
+            UI::logAndRefresh("[LEFT] yellow");
+            break;
+        default:
+            UI::logAndRefresh("[LEFT] undefined");
+            break;
     }
 
     switch (rightRes) {
@@ -54,15 +69,6 @@ int ResistanceReader::getValue(){
             break;
     }
 
-//    if(received_data == 0) {
-//        std::cout<<"no res detected!\n";
-//    } else if(received_data == 1) {
-//        std::cout<<"Purple team!\n";
-//    } else if(received_data == 2) {
-//        std::cout<<"Yellow team!\n";
-//    } else if(received_data == 3) {
-//        std::cout<<"don't turn this one!\n";
-//    }
 
     return 0;
 }
@@ -70,4 +76,20 @@ int ResistanceReader::getValue(){
 void ResistanceReader::printBuffer(const byte *buffer) const {
     printf("Printing buffer : ");
     printf("%");
+}
+
+int ResistanceReader::getStrategyIndexFromValues() {
+    if(leftRes == NONE || rightRes == NONE) {
+        return -1;
+    }
+
+    if(leftRes == RED) {
+        if(rightRes == PURPLE) return 0;
+        if(rightRes == YELLOW) return 2;
+    } else {
+        if(rightRes == PURPLE) return 3;
+        if(rightRes == YELLOW) return 1;
+    }
+
+    return 4;
 }

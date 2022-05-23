@@ -8,6 +8,7 @@
 
 #include "base/strategy/Strategy.h"
 #include "base/actuators/ActionManager.h"
+#include "ResistanceReader.h"
 
 class MatchManager {
 
@@ -30,7 +31,7 @@ private:
     Strategy * strategy_1;
     Strategy * strategy_2;
     Strategy * strategy_3;
-    int currentStrategyIndex;
+    int strategyIndex;
 
     bool firstPartIsDone = false;
 
@@ -40,9 +41,12 @@ private:
     Point *currentPoint;
     ActionManager *actionManager;
     Controller * controller;
+    ResistanceReader *resistanceReader;
+
     bool matchIsDone = false;
 
     void gettingCurrentPoint();
+
 };
 
 

@@ -14,16 +14,23 @@
 #define RED     0x00
 #define YELLOW  0x01
 #define PURPLE  0x02
+#define NONE    0x03
 
 class ResistanceReader {
 public :
     explicit ResistanceReader(int address);
-    int getValue();
+    int getValues();
+
+    int getStrategyIndexFromValues();
 
 private:
     int fd = 0;
 
     void printBuffer(const std::byte *buffer) const;
+
+    int rightRes = NONE;
+    int leftRes = NONE;
+
 };
 
 

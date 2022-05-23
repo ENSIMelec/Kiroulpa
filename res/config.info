@@ -2,7 +2,7 @@ global {
 	; Temps d’attente entre chaque boucle d’asservissement, en ms.
 	; Attention : une valeur trop élevée sature le bus I2C !
 	update_time 	10
-	match_time 		15
+	match_time 		65
 
 	nb_AX12 		7
 

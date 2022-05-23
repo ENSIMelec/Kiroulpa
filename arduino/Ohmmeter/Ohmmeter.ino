@@ -23,7 +23,7 @@
    Added some documentation
 */
 
-//#define DEBUG
+#define DEBUG
 
 #include <Wire.h>
 #define SLAVE_ADDRESS 9

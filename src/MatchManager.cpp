@@ -5,25 +5,29 @@
 #include "MatchManager.h"
 #include "base/utility/Initializer.h"
 #include "base/ui/UI.h"
+#include "KiroulpaInitializer.h"
 
 MatchManager::MatchManager() {
-    currentStrategyIndex = 0;
+    strategyIndex = 0;
     strategy_0 = new Strategy("../res/strategies/Resistances/", "strategy0");
     strategy_1 = new Strategy("../res/strategies/Resistances/", "strategy1");
     strategy_2 = new Strategy("../res/strategies/Resistances/", "strategy2");
     strategy_3 = new Strategy("../res/strategies/Resistances/", "strategy3");
 
-    startingStrategy = new Strategy("../res/strategies/", "Test");
+    startingStrategy = new Strategy("../res/strategies/Resistances/", "startingStrategy");
     Initializer::setStrategy(startingStrategy);
 
     // Setting the first point
     controller = Initializer::getController();
-    controller->setNextPoint(startingStrategy->getNextPoint());
+    currentPoint = startingStrategy->getNextPoint();
+    controller->setNextPoint(currentPoint);
 
     actionManager = Initializer::getActionManager();
 
     Configuration * configuration = Initializer::getConfiguration();
     matchTime = configuration->getInt("global.match_time");
+
+    resistanceReader = KiroulpaInitializer::getResistanceReader();
 
     timer.restart();
 }
@@ -47,8 +51,9 @@ void MatchManager::next() {
 
     // Execute the action (if there is one)
     if(currentPoint->isActionAfterMovement()) {
-        string actionFile = currentPoint->getAction() + ".as";
-        if(actionFile != "null") actionManager->action(actionFile);
+        string actionFile = currentPoint->getAction();
+        UI::logAndRefresh(actionFile.c_str());
+        if(actionFile != "null") actionManager->action(actionFile + ".as");
     }
 
     // Strategy is done is updated when asking for next point
@@ -72,15 +77,47 @@ void MatchManager::gettingCurrentPoint() {
             firstPartIsDone = true;
 
             // Reading the resistance value
+            resistanceReader->getValues();
+            strategyIndex = resistanceReader->getStrategyIndexFromValues();
+
+            UI::log("Strategy Index :");
+            UI::log(to_string(strategyIndex).c_str());
 
             // Getting the first point of the next strategy
-            currentPoint = strategy_0->getNextPoint();
+            switch (strategyIndex) {
+                case 0:
+                    currentPoint = strategy_0->getNextPoint();
+                    break;
+                case 1:
+                    currentPoint = strategy_1->getNextPoint();
+                    break;
+                case 2:
+                    currentPoint = strategy_2->getNextPoint();
+                    break;
+                case 3:
+                    currentPoint = strategy_3->getNextPoint();
+                    break;
+            }
+
             if(currentPoint == nullptr) {
                 UI::logAndRefresh("Point is null :(");
             }
         }
     } else {
-        currentPoint = strategy_0->getNextPoint();
+        switch (strategyIndex) {
+            case 0:
+                currentPoint = strategy_0->getNextPoint();
+                break;
+            case 1:
+                currentPoint = strategy_1->getNextPoint();
+                break;
+            case 2:
+                currentPoint = strategy_2->getNextPoint();
+                break;
+            case 3:
+                currentPoint = strategy_3->getNextPoint();
+                break;
+        }
     }
 }
 

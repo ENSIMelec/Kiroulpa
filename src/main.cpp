@@ -25,7 +25,6 @@ using namespace std;
 int main(int argc, char **argv) {
 
     Configuration *configuration = KiroulpaInitializer::start(false);
-    ResistanceReader * resistanceReader = KiroulpaInitializer::getResistanceReader();
     Controller * controller = KiroulpaInitializer::getController();
     Odometry * odometry = KiroulpaInitializer::getOdometry();
     MatchManager * matchManager = KiroulpaInitializer::getMatchManager();
