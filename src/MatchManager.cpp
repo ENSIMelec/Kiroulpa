@@ -9,12 +9,14 @@
 
 MatchManager::MatchManager() {
     strategyIndex = 0;
-    strategy_0 = new Strategy("../res/strategies/Resistances/", "strategy0");
-    strategy_1 = new Strategy("../res/strategies/Resistances/", "strategy1");
-    strategy_2 = new Strategy("../res/strategies/Resistances/", "strategy2");
-    strategy_3 = new Strategy("../res/strategies/Resistances/", "strategy3");
+    strategy_0 = new Strategy("../res/strategies/Purple/Resistances/", "strategy0");
+    strategy_1 = new Strategy("../res/strategies/Purple/Resistances/", "strategy1");
+    strategy_2 = new Strategy("../res/strategies/Purple/Resistances/", "strategy2");
+    strategy_3 = new Strategy("../res/strategies/Purple/Resistances/", "strategy3");
+    undefined = new Strategy("../res/strategies/Purple/Resistances/", "undefined");
+//    undefined = new Strategy("../res/strategies/", "None");
 
-    startingStrategy = new Strategy("../res/strategies/Resistances/", "startingStrategy");
+    startingStrategy = new Strategy("../res/strategies/", "Purple");
     Initializer::setStrategy(startingStrategy);
 
     // Setting the first point
@@ -97,6 +99,8 @@ void MatchManager::gettingCurrentPoint() {
                 case 3:
                     currentPoint = strategy_3->getNextPoint();
                     break;
+                default:
+                    currentPoint =  undefined->getNextPoint();
             }
 
             if(currentPoint == nullptr) {
@@ -117,6 +121,8 @@ void MatchManager::gettingCurrentPoint() {
             case 3:
                 currentPoint = strategy_3->getNextPoint();
                 break;
+            default:
+                currentPoint = undefined->getNextPoint();
         }
     }
 }

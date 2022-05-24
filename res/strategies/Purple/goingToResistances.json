@@ -4,15 +4,16 @@
 			"time": 0,
 			"type": "Wait"
 		}, {
-			"X": -100,
+			"X": -300,
 			"Y": 0,
 			"type": "MoveToPositionRelativeToAngle",
-			"direction": "backward"
+			"direction": "backward",
+			"max_speed": 40
 		}, {
 			"angle": 400,
 			"type": "AbsoluteAngle"
 		}, {
-			"X": 930,
+			"X": 890,
 			"Y": 800,
 			"type": "MoveToPosition"
 		}, {

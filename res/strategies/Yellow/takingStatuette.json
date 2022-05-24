@@ -6,17 +6,17 @@
 			"angle": 0,
 			"type": "SetXYTheta"
 		}, {
-			"X": 220,
-			"Y": 720,
+			"X": 190,
+			"Y": -690,
 			"type": "MoveToPosition"
 		}, {
 			"time": 500,
 			"type": "Wait"
 		}, {
-			"angle": 135,
+			"angle": -135,
 			"type": "AbsoluteAngle"
 		}, {
-			"action": "initReplicaSwap",
+			"action": "Yellow/initReplicaSwap",
 			"type": "Action"
 		}, {
 			"X": 200,
@@ -25,7 +25,7 @@
 			"timeout": 1500,
 			"type": "MoveToPositionRelativeToAngle"
 		}, {
-			"action": "takeStatuette",
+			"action": "Yellow/takeStatuette",
 			"type": "Action"
 		}, {
 			"time": 500,

@@ -6,23 +6,14 @@
 			"angle": 0,
 			"type": "SetXYTheta"
 		}, {
-			"X": 940,
-			"Y": 850,
+			"X": 300,
+			"Y": 0,
 			"type": "MoveToPosition"
 		}, {
-			"angle": 90,
-			"type": "AbsoluteAngle"
-		}, {
-			"action": "initResistanceReader",
-			"type": "Action"
-		}, {
-			"time": 1000,
-			"type": "Wait"
-		}, {
-			"X": 110,
+			"X": 0,
 			"Y": 0,
-			"max_speed": 35,
-			"type": "MoveToPositionRelativeToAngle"
+			"type": "MoveToPosition",
+			"direction": "backward"
 		}
 	]
 }

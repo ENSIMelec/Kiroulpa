@@ -15,6 +15,7 @@
 #include "KiroulpaInitializer.h"
 #include "MatchManager.h"
 #include "base/ui/UI.h"
+#include "base/utility/Utils.h"
 
 using namespace std;
 
@@ -34,7 +35,21 @@ int main(int argc, char **argv) {
     unsigned int updateTime = configuration->getInt("global.update_time");
     bool stopMotors = false;
 
-    UI::logAndRefresh("Entering main loop.");
+    // Init procedure
+//    UI::logAndRefresh("Put the replica in position then put the jack");
+//    while (Utils::isJackRemoved()) {
+//        UI::logAndRefresh("!");
+//    }
+
+//    UI::logAndRefresh("Closing the left clamp");
+//    Initializer::getActionManager()->action("closeLeftClamp");
+
+    // Waiting for JACK to be removed
+    UI::logAndRefresh("Waiting for jack to be removed");
+    while(!Utils::isJackRemoved()) {}
+
+    UI::logAndRefresh("Starting the match !");
+    Initializer::startLidar();
 
     Clock updateTimer;
     while(!matchManager->isMatchDone()) {
@@ -49,6 +64,7 @@ int main(int argc, char **argv) {
             odometry->update();
 
             // All the case we should stop the motors
+            stopMotors = false;
             if(Initializer::isLidarActivated() && Lidar::isDanger()) {
                 stopMotors = true;
             }

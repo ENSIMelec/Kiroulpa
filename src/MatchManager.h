@@ -31,6 +31,7 @@ private:
     Strategy * strategy_1;
     Strategy * strategy_2;
     Strategy * strategy_3;
+    Strategy *undefined;
     int strategyIndex;
 
     bool firstPartIsDone = false;

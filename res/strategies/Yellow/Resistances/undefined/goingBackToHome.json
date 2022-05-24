@@ -1,0 +1,21 @@
+{
+	"Points" : [
+		{
+			"time": 0,
+			"type": "Wait"
+		}, {
+			"X": -300,
+			"Y": 0,
+			"direction": "backward",
+			"type": "MoveToPositionRelativeToAngle"
+		}, {
+			"X": 0,
+			"Y": 0,
+			"type": "MoveToPosition",
+			"direction": "backward"
+		}, {
+			"angle": 450,
+			"type": "AbsoluteAngle"
+		}
+	]
+}

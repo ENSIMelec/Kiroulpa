@@ -10,14 +10,14 @@
 			"direction": "backward",
 			"max_speed": 50
 		}, {
-			"angle": 270,
+			"angle": -270,
 			"type": "AbsoluteAngle"
 		}, {
 			"X": 30,
-			"Y": -600,
+			"Y": 600,
 			"type": "MoveToPosition"
 		}, {
-			"angle": 270,
+			"angle": -270,
 			"type": "AbsoluteAngle"
 		}, {
 			"X": 400,

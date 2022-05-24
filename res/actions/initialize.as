@@ -3,12 +3,20 @@
 A 1 1023 1023 0
 A 2 200 1023 0
 
-# Pinces
-A 3 350 1023 0
-A 4 600 1023 0
-
 # Ascenseur
 A 5 600 1023 0
 
-A 6 1023 1023 0
-A 7 512 1023 1000
+A 6 300 1023 0
+A 7 512 1023 0
+
+# Opening Cramps
+A 3 100 1023 0
+A 4 800 1023 4000
+
+A 4 650 1023 0
+
+
+# Left clamp opened 100
+# Left clamp closed 300
+# Right clamp opened 800
+# Right clamp closed 600

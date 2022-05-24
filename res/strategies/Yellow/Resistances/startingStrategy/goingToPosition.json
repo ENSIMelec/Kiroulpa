@@ -6,30 +6,27 @@
 			"angle": 0,
 			"type": "SetXYTheta"
 		}, {
-			"X": 220,
-			"Y": 720,
+			"X": 910,
+			"Y": 800,
 			"type": "MoveToPosition"
 		}, {
-			"time": 500,
-			"type": "Wait"
-		}, {
-			"angle": 135,
+			"angle": 90,
 			"type": "AbsoluteAngle"
 		}, {
-			"action": "initReplicaSwap",
+			"action": "initResistanceReader",
 			"type": "Action"
 		}, {
 			"X": 200,
 			"Y": 0,
+			"timeout": 2000,
 			"max_speed": 30,
-			"timeout": 1500,
 			"type": "MoveToPositionRelativeToAngle"
 		}, {
-			"action": "takeStatuette",
-			"type": "Action"
+			"angle": 90,
+			"type": "SetTheta"
 		}, {
-			"time": 500,
-			"type": "Wait"
-		} 
+			"action": "ohmmeterDown",
+			"type": "Action"
+		}
 	]
 }
