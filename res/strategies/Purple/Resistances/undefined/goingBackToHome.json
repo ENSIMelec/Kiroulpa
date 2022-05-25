@@ -14,7 +14,7 @@
 			"type": "MoveToPosition",
 			"direction": "backward"
 		}, {
-			"angle": 450,
+			"angle": 90,
 			"type": "AbsoluteAngle"
 		}
 	]

@@ -6,7 +6,7 @@
 			"angle": 0,
 			"type": "SetXYTheta"
 		}, {
-			"angle": -90,
+			"angle": -48,
 			"type": "AbsoluteAngle"
 		}
 	]

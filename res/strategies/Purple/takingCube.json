@@ -16,7 +16,7 @@
 			"angle": 135,
 			"type": "AbsoluteAngle"
 		}, {
-			"action": "initReplicaSwap",
+			"action": "Purple/initReplicaSwap",
 			"type": "Action"
 		}, {
 			"X": 200,
@@ -25,7 +25,7 @@
 			"timeout": 1500,
 			"type": "MoveToPositionRelativeToAngle"
 		}, {
-			"action": "takeStatuette",
+			"action": "Purple/takeStatuette",
 			"type": "Action"
 		}, {
 			"time": 500,

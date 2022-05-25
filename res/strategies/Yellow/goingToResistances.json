@@ -4,7 +4,7 @@
 			"time": 0,
 			"type": "Wait"
 		}, {
-			"angle": -90,
+			"angle": 90,
 			"type": "SetTheta"
 		}, {
 			"X": -300,
@@ -13,23 +13,23 @@
 			"direction": "backward",
 			"max_speed": 40
 		}, {
-			"angle": 60,
+			"angle": -60,
 			"type": "AbsoluteAngle"
 		}, {
 			"X": 400,
-			"Y": 700,
+			"Y": -700,
 			"type": "MoveToPosition",
 			"max_speed": 70
 		}, {
-			"angle": 10,
+			"angle": -10,
 			"type": "AbsoluteAngle"
 		}, {
 			"X": 950,
-			"Y": 860,
+			"Y": -860,
 			"type": "MoveToPosition",
 			"max_speed": 70
 		}, {
-			"angle": 90,
+			"angle": -90,
 			"type": "AbsoluteAngle"
 		}, {
 			"action": "initResistanceReader",
@@ -41,10 +41,10 @@
 			"max_speed": 30,
 			"type": "MoveToPositionRelativeToAngle"
 		}, {
-			"angle": 90,
+			"angle": -90,
 			"type": "SetTheta"
 		}, {
-			"Y": 995,
+			"Y": -995,
 			"type": "SetY"
 		}, {
 			"action": "ohmmeterDown",

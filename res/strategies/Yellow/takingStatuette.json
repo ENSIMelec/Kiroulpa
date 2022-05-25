@@ -6,8 +6,8 @@
 			"angle": 0,
 			"type": "SetXYTheta"
 		}, {
-			"X": 190,
-			"Y": -690,
+			"X": 180,
+			"Y": -680,
 			"type": "MoveToPosition"
 		}, {
 			"time": 500,

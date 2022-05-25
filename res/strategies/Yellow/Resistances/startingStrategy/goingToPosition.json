@@ -7,10 +7,10 @@
 			"type": "SetXYTheta"
 		}, {
 			"X": 910,
-			"Y": 800,
+			"Y": -800,
 			"type": "MoveToPosition"
 		}, {
-			"angle": 90,
+			"angle": -90,
 			"type": "AbsoluteAngle"
 		}, {
 			"action": "initResistanceReader",
@@ -22,7 +22,7 @@
 			"max_speed": 30,
 			"type": "MoveToPositionRelativeToAngle"
 		}, {
-			"angle": 90,
+			"angle": -90,
 			"type": "SetTheta"
 		}, {
 			"action": "ohmmeterDown",

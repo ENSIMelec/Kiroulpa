@@ -1,0 +1,45 @@
+{
+	"Points": [
+		{
+			"X": 0,
+			"Y": 0,
+			"angle": 0,
+			"type": "SetXYTheta"
+		}, {
+			"X": 400,
+			"Y": -700,
+			"type": "MoveToPosition",
+			"max_speed": 70
+		}, {
+			"angle": -10,
+			"type": "AbsoluteAngle"
+		}, {
+			"X": 950,
+			"Y": -860,
+			"type": "MoveToPosition",
+			"max_speed": 70
+		}, {
+			"angle": -90,
+			"type": "AbsoluteAngle"
+		}, {
+			"X": 300,
+			"Y": 0,
+			"timeout": 1500,
+			"max_speed": 40,
+			"type": "MoveToPositionRelativeToAngle"
+		}, {
+			"X": -300,
+			"Y": 0,
+			"direction": "backward",
+			"type": "MoveToPositionRelativeToAngle"
+		}, {
+			"X": 0,
+			"Y": 0,
+			"type": "MoveToPosition",
+			"direction": "backward"
+		}, {
+			"angle": -90,
+			"type": "AbsoluteAngle"
+		}
+	]
+}

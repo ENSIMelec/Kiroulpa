@@ -5,20 +5,30 @@
 			"type": "Wait"
 		}, {
 			"X": -200,
-			"Y": -100,
+			"Y": 0,
 			"type": "MoveToPositionRelativeToAngle",
 			"direction": "backward",
 			"max_speed": 50
 		}, {
-			"angle": 270,
+			"angle": 240,
 			"type": "AbsoluteAngle"
 		}, {
-			"X": 30,
+			"X": 50,
 			"Y": -600,
 			"type": "MoveToPosition"
 		}, {
 			"angle": 270,
 			"type": "AbsoluteAngle"
+		}, {
+			"action": "clampsInTheMiddle",
+			"type": "Action"
+
+		}, {
+			"action": "elevatorUp",
+			"type": "Action"
+		}, {
+			"time": 10,
+			"type": "Wait"
 		}, {
 			"X": 400,
 			"Y": 0,

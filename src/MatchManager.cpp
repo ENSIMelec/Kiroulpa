@@ -14,10 +14,11 @@ MatchManager::MatchManager() {
     strategy_1 = new Strategy("../res/strategies/Purple/Resistances/", "strategy1");
     strategy_2 = new Strategy("../res/strategies/Purple/Resistances/", "strategy2");
     strategy_3 = new Strategy("../res/strategies/Purple/Resistances/", "strategy3");
-    undefined = new Strategy("../res/strategies/Purple/Resistances/", "undefined");
-//    undefined = new Strategy("../res/strategies/", "None");
+    //undefined = new Strategy("../res/strategies/Purple/Resistances/", "undefined");
+    undefined = new Strategy("../res/strategies/", "None");
 
-    startingStrategy = new Strategy("../res/strategies/", "Purple");
+    startingStrategy = new Strategy("../res/strategies/", "Homologation");
+    //startingStrategy = new Strategy("../res/strategies/", "Test");
     Initializer::setStrategy(startingStrategy);
 
     // Setting the first point
@@ -36,14 +37,13 @@ MatchManager::MatchManager() {
 }
 
 bool MatchManager::isMatchDone() {
-    return matchIsDone;
 
-//    int totalTime = (int) timer.elapsed_s();
-//    if(totalTime >= matchTime) {
-//        return true;
-//    }
-
-    return false;
+    int totalTime = (int) timer.elapsed_s();
+    if(totalTime >= matchTime) {
+        return true;
+    } else {
+        return matchIsDone;
+    }
 }
 
 void MatchManager::next() {
