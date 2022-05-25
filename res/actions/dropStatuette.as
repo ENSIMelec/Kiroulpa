@@ -1,6 +1,6 @@
-
 # Clamp support in the middle
-A 6 1023 1023 500
+# Removed for yellow startegy
+#A 6 1023 1023 1000
 
 # Open left clamp
 A 3 100 1023 0
