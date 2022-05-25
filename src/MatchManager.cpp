@@ -6,6 +6,7 @@
 #include "base/utility/Initializer.h"
 #include "base/ui/UI.h"
 #include "KiroulpaInitializer.h"
+#include "base/Lidar.h";
 
 MatchManager::MatchManager() {
     strategyIndex = 0;
@@ -64,6 +65,14 @@ void MatchManager::next() {
     // Check if all strategies are done
     if(currentPoint != nullptr) {
         UI::log("Going to next point");
+
+        bool deactivateLidar = currentPoint->getDactivateLidar();
+        if(deactivateLidar) {
+            Initializer::setLidarActivated(false);
+        } else {
+            Initializer::setLidarActivated(true);
+        }
+
         controller->setNextPoint(currentPoint);
     } else {
         UI::log("End of the match (maybe?)");
