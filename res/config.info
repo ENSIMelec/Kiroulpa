@@ -51,7 +51,7 @@ controller {
 		small {
 			; 15.0 V	
 			Pk 	20
-			Pi  0
+			Pi  0.03
 			Pd 	0
 		}
 

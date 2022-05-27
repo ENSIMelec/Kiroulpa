@@ -6,19 +6,29 @@
 #include "base/utility/Initializer.h"
 #include "base/ui/UI.h"
 #include "KiroulpaInitializer.h"
-#include "base/Lidar.h";
+#include "base/Lidar.h"
 
 MatchManager::MatchManager() {
     strategyIndex = 0;
-    strategy_0 = new Strategy("../res/strategies/Purple/Resistances/", "strategy0");
-    strategy_1 = new Strategy("../res/strategies/Purple/Resistances/", "strategy1");
-    strategy_2 = new Strategy("../res/strategies/Purple/Resistances/", "strategy2");
-    strategy_3 = new Strategy("../res/strategies/Purple/Resistances/", "strategy3");
-    //undefined = new Strategy("../res/strategies/Purple/Resistances/", "undefined");
-    undefined = new Strategy("../res/strategies/", "None");
 
-    startingStrategy = new Strategy("../res/strategies/", "Homologation");
-    //startingStrategy = new Strategy("../res/strategies/", "Test");
+    if(Initializer::getColor() == YELLOW) {
+        strategy_0 = new Strategy("../res/strategies/Yellow/Resistances/", "strategy0");
+        strategy_1 = new Strategy("../res/strategies/Yellow/Resistances/", "strategy1");
+        strategy_2 = new Strategy("../res/strategies/Yellow/Resistances/", "strategy2");
+        strategy_3 = new Strategy("../res/strategies/Yellow/Resistances/", "strategy3");
+        undefined = new Strategy("../res/strategies/Yellow/Resistances/", "undefined");
+
+        startingStrategy = new Strategy("../res/strategies/", "Yellow");
+    } else {
+        strategy_0 = new Strategy("../res/strategies/Purple/Resistances/", "strategy0");
+        strategy_1 = new Strategy("../res/strategies/Purple/Resistances/", "strategy1");
+        strategy_2 = new Strategy("../res/strategies/Purple/Resistances/", "strategy2");
+        strategy_3 = new Strategy("../res/strategies/Purple/Resistances/", "strategy3");
+        undefined = new Strategy("../res/strategies/Purple/Resistances/", "undefined");
+
+        startingStrategy = new Strategy("../res/strategies/", "Purple");
+    }
+
     Initializer::setStrategy(startingStrategy);
 
     // Setting the first point
@@ -66,11 +76,10 @@ void MatchManager::next() {
     if(currentPoint != nullptr) {
         UI::log("Going to next point");
 
-        bool deactivateLidar = currentPoint->getDactivateLidar();
-        if(deactivateLidar) {
-            Initializer::setLidarActivated(false);
-        } else {
+        if(currentPoint->getLidarShouldBeActivated() && currentPoint->getChangeLidarState()) {
             Initializer::setLidarActivated(true);
+        } else {
+            Initializer::setLidarActivated(false);
         }
 
         controller->setNextPoint(currentPoint);
@@ -91,8 +100,28 @@ void MatchManager::gettingCurrentPoint() {
             resistanceReader->getValues();
             strategyIndex = resistanceReader->getStrategyIndexFromValues();
 
-            UI::log("Strategy Index :");
-            UI::log(to_string(strategyIndex).c_str());
+            UI::logAndRefresh("Strategy Index :");
+            UI::logAndRefresh(to_string(strategyIndex).c_str());
+
+            if(strategyIndex < 0) {
+                UI::logAndRefresh("Adjust ohmmeter on the left");
+                actionManager->action("Purple/adjustOhmmeterOnTheLeft.as");
+                resistanceReader->getValues();
+                strategyIndex = resistanceReader->getStrategyIndexFromValues();
+            }
+
+            UI::logAndRefresh("Strategy Index :");
+            UI::logAndRefresh(to_string(strategyIndex).c_str());
+
+            if(strategyIndex < 0) {
+                UI::logAndRefresh("Adjust ohmmeter on the right");
+                actionManager->action("Purple/adjustOhmmeterOnTheRight.as");
+                resistanceReader->getValues();
+                strategyIndex = resistanceReader->getStrategyIndexFromValues();
+            }
+
+            UI::logAndRefresh("Strategy Index :");
+            UI::logAndRefresh(to_string(strategyIndex).c_str());
 
             // Getting the first point of the next strategy
             switch (strategyIndex) {
@@ -138,4 +167,8 @@ void MatchManager::gettingCurrentPoint() {
 
 Point *MatchManager::getNextMatchPoint() {
     return nullptr;
+}
+
+void MatchManager::startTimer() {
+    timer.restart();
 }

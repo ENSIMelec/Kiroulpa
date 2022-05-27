@@ -1,11 +1,80 @@
 {
 	"Points": [
 		{
-			"time": 500,
+			"time": 0,
 			"type": "Wait"
 		}, {
-			"time": 500,
-			"type": "Wait"
+			"X": -50,
+			"Y": -400,
+			"type": "MoveToPositionRelativeToAngle",
+			"direction": "backward",
+			"max_speed": 60
+		}, {
+			"angle": 0,
+			"type": "AbsoluteAngle"
+		}, {
+			"X": 620,
+			"Y": -955,
+			"type": "MoveToPosition",
+			"max_speed": 50
+		}, {
+			"action": "rightActuatorOpened",
+			"type": "Action"
+		}, {
+			"action": "rightActuatorClosed",
+			"type": "Action"
+		}, {
+			"X": 840,
+			"Y": -950,
+			"type": "MoveToPosition",
+			"max_speed": 50
+		}, {
+			"action": "rightActuatorOpened",
+			"type": "Action"
+		}, {
+			"action": "rightActuatorClosed",
+			"type": "Action"
+		}, {
+			"X": 1180,
+			"Y": -950,
+			"type": "MoveToPosition",
+			"max_speed": 50
+		}, {
+			"action": "rightActuatorOpened",
+			"type": "Action"
+		}, {
+			"action": "rightActuatorClosed",
+			"type": "Action"
+		}, {
+			"X": 1375,
+			"Y": -950,
+			"type": "MoveToPosition",
+			"max_speed": 50
+		}, {
+			"action": "rightActuatorOpened",
+			"type": "Action"
+		}, {
+			"action": "rightActuatorClosed",
+			"type": "Action"
+		}, {
+			"X": 1055,
+			"Y": 180,
+			"type": "MoveToPosition",
+			"direction": "backward"
+		}, {
+			"angle": 0,
+			"type": "AbsoluteAngle"
+		}, {
+			"X": 50,
+			"Y": 100,
+			"type": "MoveToPosition",
+			"direction": "backward",
+			"timeout": 10000,
+			"max_speed": 80
+		}, {
+			"angle": 0,
+			"type": "AbsoluteAngle",
+			"timeout": 5000
 		}
 	]
 }

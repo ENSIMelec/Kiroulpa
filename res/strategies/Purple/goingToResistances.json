@@ -14,17 +14,18 @@
 			"max_speed": 40
 		}, {
 			"angle": 60,
-			"type": "AbsoluteAngle"
+			"type": "AbsoluteAngle",
 		}, {
 			"X": 400,
 			"Y": 700,
 			"type": "MoveToPosition",
-			"max_speed": 70
+			"max_speed": 70,
+			"activate_lidar": 1
 		}, {
 			"angle": 10,
 			"type": "AbsoluteAngle"
 		}, {
-			"X": 950,
+			"X": 920,
 			"Y": 860,
 			"type": "MoveToPosition",
 			"max_speed": 70

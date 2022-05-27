@@ -58,18 +58,24 @@
 			"action": "leftActuatorClosed",
 			"type": "Action"
 		}, {
-			"X": 400,
-			"Y": 800,
-			"type": "MoveToPosition",
-			"direction": "backward"
-		}, {
-			"X": 0,
-			"Y": 0,
+			"X": 1055,
+			"Y": -180,
 			"type": "MoveToPosition",
 			"direction": "backward"
 		}, {
 			"angle": 0,
 			"type": "AbsoluteAngle"
+		}, {
+			"X": 50,
+			"Y": -100,
+			"type": "MoveToPosition",
+			"direction": "backward",
+			"timeout": 10000,
+			"max_speed": 80
+		}, {
+			"angle": 0,
+			"type": "AbsoluteAngle",
+			"timeout": 5000
 		}
 	]
 }

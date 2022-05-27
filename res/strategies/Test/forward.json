@@ -6,9 +6,15 @@
 			"angle": 0,
 			"type": "SetXYTheta"
 		}, {
-			"X": 300,
+			"X": 500,
 			"Y": 0,
-			"type": "MoveToPosition"
+			"type": "MoveToPosition",
+			"activate_lidar": 0
+		}, {
+			"X": 500,
+			"Y": 0,
+			"type": "MoveToPosition",
+			"activate_lidar": 1
 		}, {
 			"X": 0,
 			"Y": 0,

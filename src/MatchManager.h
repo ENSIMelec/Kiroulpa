@@ -24,6 +24,8 @@ public:
 
     Point *getNextMatchPoint();
 
+    void startTimer();
+
 private:
     Strategy * startingStrategy;
 

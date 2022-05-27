@@ -25,6 +25,20 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
+    if(argc >= 2) {
+        printf("Kiroulpa %s", argv[1]);
+        if(string(argv[1]) == string("yellow")) {
+            Initializer::setColor(YELLOW);
+            printf("Yellow");
+        } else {
+            Initializer::setColor(PURPLE);
+            printf("purple");
+        }
+    } else {
+        printf("USAGE: ./kiroulpa COLOR\n * COLOR: yellow/purple");
+        exit(0);
+     }
+
     Configuration *configuration = KiroulpaInitializer::start(false);
     Controller * controller = KiroulpaInitializer::getController();
     Odometry * odometry = KiroulpaInitializer::getOdometry();
@@ -35,21 +49,13 @@ int main(int argc, char **argv) {
     unsigned int updateTime = configuration->getInt("global.update_time");
     bool stopMotors = false;
 
-    // Init procedure
-//    UI::logAndRefresh("Put the replica in position then put the jack");
-//    while (Utils::isJackRemoved()) {
-//        UI::logAndRefresh("!");
-//    }
-
-//    UI::logAndRefresh("Closing the left clamp");
-//    Initializer::getActionManager()->action("closeLeftClamp");
-
     // Waiting for JACK to be removed
     UI::logAndRefresh("Waiting for jack to be removed");
     while(!Utils::isJackRemoved()) {}
 
     UI::logAndRefresh("Starting the match !");
     Initializer::startLidar();
+    matchManager->startTimer();
 
     Clock updateTimer;
     while(!matchManager->isMatchDone()) {

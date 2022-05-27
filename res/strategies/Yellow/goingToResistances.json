@@ -13,8 +13,12 @@
 			"direction": "backward",
 			"max_speed": 40
 		}, {
+			"action": "initResistanceReader",
+			"type": "Action"
+		}, {
 			"angle": -60,
-			"type": "AbsoluteAngle"
+			"type": "AbsoluteAngle",
+			"activate_lidar": 1
 		}, {
 			"X": 400,
 			"Y": -700,
@@ -24,16 +28,13 @@
 			"angle": -10,
 			"type": "AbsoluteAngle"
 		}, {
-			"X": 950,
+			"X": 845,
 			"Y": -860,
 			"type": "MoveToPosition",
 			"max_speed": 70
 		}, {
 			"angle": -90,
 			"type": "AbsoluteAngle"
-		}, {
-			"action": "initResistanceReader",
-			"type": "Action"
 		}, {
 			"X": 300,
 			"Y": 0,

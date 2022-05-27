@@ -11,7 +11,8 @@
 			"max_speed": 50
 		}, {
 			"angle": 240,
-			"type": "AbsoluteAngle"
+			"type": "AbsoluteAngle",
+			"activate_lidar": 0
 		}, {
 			"X": 50,
 			"Y": -600,
@@ -22,7 +23,6 @@
 		}, {
 			"action": "clampsInTheMiddle",
 			"type": "Action"
-
 		}, {
 			"action": "elevatorUp",
 			"type": "Action"

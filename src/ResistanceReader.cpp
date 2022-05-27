@@ -3,6 +3,7 @@
 //
 #include "ResistanceReader.h"
 #include "base/ui/UI.h"
+#include "base/utility/Initializer.h"
 #include <unistd.h>
 
 using namespace std;
@@ -83,6 +84,12 @@ int ResistanceReader::getStrategyIndexFromValues() {
         return -1;
     }
 
+    if(Initializer::getColor() == YELLOW) {
+        int t = rightRes;
+        rightRes = leftRes;
+        leftRes = t;
+    }
+
     if(leftRes == RED) {
         if(rightRes == PURPLE) return 0;
         if(rightRes == YELLOW) return 2;
@@ -91,5 +98,5 @@ int ResistanceReader::getStrategyIndexFromValues() {
         if(rightRes == YELLOW) return 1;
     }
 
-    return 4;
+    return -1;
 }
