@@ -10,6 +10,9 @@
 			"direction": "backward",
 			"max_speed": 60
 		}, {
+			"action": "clampsInTheMiddle",
+			"type": "Action"
+		}, {
 			"angle": 0,
 			"type": "AbsoluteAngle"
 		},  {

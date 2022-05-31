@@ -28,7 +28,7 @@
 			"angle": -10,
 			"type": "AbsoluteAngle"
 		}, {
-			"X": 845,
+			"X": 795,
 			"Y": -860,
 			"type": "MoveToPosition",
 			"max_speed": 70

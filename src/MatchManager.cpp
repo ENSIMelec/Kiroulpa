@@ -123,6 +123,16 @@ void MatchManager::gettingCurrentPoint() {
             UI::logAndRefresh("Strategy Index :");
             UI::logAndRefresh(to_string(strategyIndex).c_str());
 
+            if(strategyIndex < 0) {
+                UI::logAndRefresh("Adjust ohmmeter on the right");
+                actionManager->action("Purple/adjustOhmmeterFurtherOnTheRight.as");
+                resistanceReader->getValues();
+                strategyIndex = resistanceReader->getStrategyIndexFromValues();
+            }
+
+            UI::logAndRefresh("Strategy Index :");
+            UI::logAndRefresh(to_string(strategyIndex).c_str());
+
             // Getting the first point of the next strategy
             switch (strategyIndex) {
                 case 0:

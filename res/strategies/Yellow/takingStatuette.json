@@ -28,6 +28,14 @@
 			"action": "Yellow/takeStatuette",
 			"type": "Action"
 		}, {
+			"X": -30,
+			"Y": 0,
+			"direction": "backward",
+			"type": "MoveToPositionRelativeToAngle"
+		}, {
+			"action": "openRightClamp",
+			"type": "Action"
+		}, {
 			"time": 500,
 			"type": "Wait"
 		}

@@ -10,6 +10,9 @@
 			"direction": "backward",
 			"max_speed": 50
 		}, {
+			"action": "clampsInTheMiddle",
+			"type": "Action"
+		}, {
 			"angle": 240,
 			"type": "AbsoluteAngle",
 			"activate_lidar": 0

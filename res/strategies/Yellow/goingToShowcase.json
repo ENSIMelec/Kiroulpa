@@ -24,8 +24,8 @@
 		}, {
 			"action": "elevatorUp",
 			"type": "Action"
-		}, {
-			"action": "clampsOnTheRight",
+		} ,{
+			"action": "closeRightClamp",
 			"type": "Action"
 		}, {
 			"time": 10,

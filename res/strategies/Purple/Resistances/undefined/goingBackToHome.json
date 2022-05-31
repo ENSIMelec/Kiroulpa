@@ -9,8 +9,11 @@
 			"direction": "backward",
 			"type": "MoveToPositionRelativeToAngle"
 		}, {
+			"action": "clampsInTheMiddle",
+			"type": "Action"
+		}, {
 			"X": 1055,
-			"Y": 180,
+			"Y": -180,
 			"type": "MoveToPosition",
 			"direction": "backward"
 		}, {

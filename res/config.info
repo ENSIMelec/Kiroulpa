@@ -58,7 +58,7 @@ controller {
 		big {
 			; 15.0 V
 			Pk 	60
-			Pi  0
+			Pi  0.001
 			Pd 	0
 		}
 	}
@@ -67,7 +67,7 @@ controller {
 		distance {
 			; 15.0 V
 			Pk	0.95
-			Pi	0.001
+			Pi	0.02
 			Pd	0
 
 			; 90 at 15.0V
